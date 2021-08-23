@@ -1,6 +1,7 @@
 import React from 'react'
+import {useState,useEffect} from 'react'
 
-function SignIp() {
+function SignUp() {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     return (

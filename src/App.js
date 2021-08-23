@@ -8,7 +8,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  withRouter
 } from "react-router-dom";
 
 function App() {
@@ -17,26 +18,17 @@ function App() {
     <div className="app">
       <h1>What's app</h1>
       <div className="app_body"> 
-      
-      {/* <SignUp className="signup_box"/> */}
-      
-      <Router>
-          {/* <Switch>  */}
-                 
-            <Sidebar/>
-            <Chat roomID="4" userId="1"/>
-            {/* <Route path="/rooms/:roomID">
-              <Chat roomId={roomID} userId="1"/>
-            </Route> */}
-            {/* <Route path="/rooms/:roomID"  render={
-          ({ match }) => (<Chat roomID={match.params.roomID}  userId="1" />)} /> */}
 
-            {/* <Route path="/">
-              <Chat/>
-            </Route> */}
-          {/* </Switch> */}
+        <Sidebar/>
+      
+        <Switch> 
+        <Route exact  path="/rooms" component={withRouter(Chat)}/>
+          
+          <Route path="/">
+            <Chat/>
+          </Route>
+        </Switch>
  
-      </Router>
       </div>
     </div>
   );

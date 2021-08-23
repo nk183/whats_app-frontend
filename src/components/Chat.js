@@ -11,45 +11,45 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import MicIcon from '@material-ui/icons/Mic';
 import axios from'axios'
 
+import {useQuery} from '../hooks' 
 
 
+function Chat() {
 
-function Chat({roomID,userId}) {
-    const [input, setInput] = useState("");
+    // const [roomId, setRoomId] = useState(null)
+    const query = useQuery();
+    // setRoomId(query.get("roomId") || "");
+    const roomId = query.get("roomId") || ""
+    const userId="1";
+    console.log("lid-",roomId); 
     const [seed, setseed] = useState(Math.floor(Math.random()*5000))
-    const [chat, setchat] = useState({})
+    const [chat, setchat] = useState({message:null,roomId:roomId,userId:userId})
     const [roomChats, setRoomChats] = useState([])
-    // const [roomId, setRooId] = useState("2");
-    const [isAdd, setIsAdd] = useState("not")
-    // setseed(Math.floor(Math.random()*5000));
+    const [isAdd, setIsAdd] = useState(false)
+
     useEffect(() => {
-        
-        axios.get(`http://localhost:8080/getChat/${roomID}`)
+        console.log("useEffect",roomId);
+        axios.get(`http://localhost:8080/getChat/${roomId}`)
                 .then(response=>{
                     console.log(response.data);
                     setRoomChats(response.data)
-                    setIsAdd("not")
+                    setIsAdd(false)
                 })
                 .catch(error=>{
                     console.log(error);
                 }
                 )
 
-    }, [isAdd,roomID]) 
+    }, [isAdd,roomId]) 
 
     const sendchat=(e)=>{
         e.preventDefault();
-        // alert(input);
-        // alert();
-        // alert("room"+roomID)
-        console.log(input);
-        // var userId="1"
-        setchat({...chat,"message":input,"userId":userId,"roomId":roomID})
         console.log(chat);
         axios.post("http://localhost:8080/addChat",chat)
             .then(response=>{
-                // alert(response.data);
-                setIsAdd(response.data)
+                console.log(response.data);
+                setchat({...chat,message:''})
+                setIsAdd(true)
             })
             .catch(error=>{
                 alert(error)
@@ -57,7 +57,8 @@ function Chat({roomID,userId}) {
                 }
             )
 
-        setInput('');
+        console.log(chat);
+
     }
     
     return (
@@ -65,8 +66,8 @@ function Chat({roomID,userId}) {
            <div className='chat_header'>
                 <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
                 <div className='chat_header_info'>
-                    <h3>name {roomID}</h3>
-                    <p>Last seem at ...</p>
+                    <h3>name {roomId}</h3>
+                    <p>Last seen at ...</p>
                 </div>
                 <div className='chat_headerRight'>
                     <IconButton>
@@ -86,7 +87,7 @@ function Chat({roomID,userId}) {
            
                 <p className={`chat_message ${userId==temp.userId && 'chat_reciever'}`}>
                     <spam className='chat_name'>
-                        {temp.userId}
+                        {temp.userId} naman
                     </spam>
                     {temp.message}
                     <spam className='chat_timestamp'>
@@ -115,7 +116,7 @@ function Chat({roomID,userId}) {
                 
                 <InsertEmoticonIcon></InsertEmoticonIcon>
                 <form>
-                    <input value={input} placeholder="type chat ..." type="text" onChange={e=>setInput(e.target.value)}/>
+                    <input value={chat.message} placeholder="type chat ..." type="text" onChange={e=>setchat({...chat,message:e.target.value,roomId:roomId})}/>
                     <button onClick={sendchat} type='submit'>Send</button>
 
                 </form>

@@ -28,6 +28,7 @@
 .chat_headerRight {
     display: flex;
     justify-content: space-between;
+    position:relative; left:290px; top:2px;
     /* min-width: 100px;s */
 }
 
